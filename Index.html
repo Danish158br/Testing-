@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PromptCraft AI Prompt Generator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+  />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    .hidden {
+        display: none;
+    }
+     textarea {
+        white-space: pre-wrap; /* Respect line breaks in textarea */
+    }
+  </style>
+</head>
+<body class="bg-black text-white min-h-screen flex flex-col items-center px-4">
+  <header class="w-full max-w-md mt-4 text-center">
+    <h1 class="text-white font-semibold text-lg">PromptCraf<span class="inline-block relative">
+      <span class="text-white font-semibold text-lg">t</span>
+      <span class="absolute -top-2 -right-4 bg-purple-600 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold text-white">✳</span>
+    </span></h1>
+  </header>
+
+  <main class="w-full max-w-md mt-8">
+    <h2 class="text-2xl font-extrabold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-1">AI Prompt Generator</h2>
+    <p class="text-gray-400 text-sm mb-6">Create powerful, customized prompts for AI tools</p>
+
+    <div class="bg-[#121212] rounded-lg p-4">
+      <nav class="flex space-x-2 mb-4 border border-[#2a2a2a] rounded-t-md bg-[#121212]">
+        <button id="generator-tab" class="bg-[#1f1f1f] text-white font-semibold px-4 py-2 rounded-t-md">Generator</button>
+        <button id="saved-tab" class="text-gray-500 px-4 py-2 rounded-t-md">Saved Prompts (<span id="saved-count">0</span>)</button>
+      </nav>
+
+      <section id="generator-section">
+        <h3 class="font-bold text-white mb-1">Configure Your AI Prompt</h3>
+        <p class="text-gray-400 text-xs mb-4">Set the parameters for your customized AI prompt</p>
+
+        <label class="block text-gray-300 text-xs font-semibold mb-1" for="promptCategory">Prompt Category</label>
+        <select
+            id="promptCategory"
+            class="w-full bg-[#1f1f1f] text-gray-300 text-xs rounded px-3 py-2 mb-4 focus:outline-none"
+          >
+          <option value="General">General</option>
+          <option value="Creative Writing">Creative Writing</option>
+          <option value="Code Generation">Code Generation</option>
+          <option value="Image Description">Image Description / Prompt</option>
+          <option value="Data Analysis">Data Analysis</option>
+          <option value="Educational">Educational</option>
+          <option value="Technical Explanation">Technical Explanation</option>
+          </select>
+
+        <label class="block text-gray-300 text-xs font-semibold mb-1" for="topicSubject">Topic / Subject</label>
+        <input
+          id="topicSubject"
+          type="text"
+          placeholder="e.g., The future of AI, Writing a short story, Python function for sorting"
+          class="w-full bg-[#1f1f1f] text-gray-300 text-xs rounded px-3 py-2 mb-4 placeholder:text-gray-500 focus:outline-none"
+        />
+
+         <label class="block text-gray-300 text-xs font-semibold mb-1" for="aiRolePersona">AI Role / Persona (Optional)</label>
+        <input
+          id="aiRolePersona"
+          type="text"
+          placeholder="e.g., Act as an expert historian, Be a friendly tutor, Adopt a technical tone"
+          class="w-full bg-[#1f1f1f] text-gray-300 text-xs rounded px-3 py-2 mb-4 placeholder:text-gray-500 focus:outline-none"
+        />
+
+        <label class="block text-gray-300 text-xs font-semibold mb-1" for="tone">Tone (Optional)</label>
+        <select
+          id="tone"
+          class="w-full bg-[#1f1f1f] text-gray-300 text-xs rounded px-3 py-2 mb-4 focus:outline-none"
+        >
+          <option value="Neutral">Neutral</option>
+          <option value="Helpful & Encouraging">Helpful &amp; Encouraging</option>
+          <option value="Formal & Technical">Formal &amp; Technical</option>
+          <option value="Concise & Direct">Concise &amp; Direct</option>
+          <option value="Friendly & Casual">Friendly &amp; Casual</option>
+          <option value="Creative & Imaginative">Creative &amp; Imaginative</option>
+          </select>
+
+        <label class="block text-gray-300 text-xs font-semibold mb-1" for="detailLevel">Detail Level</label>
+        <select
+          id="detailLevel"
+          class="w-full bg-[#1f1f1f] text-gray-300 text-xs rounded px-3 py-2 mb-4 focus:outline-none"
+        >
+          <option value="Standard Detail">Standard Detail</option>
+          <option value="High Detail (In-depth)">High Detail (In-depth)</option>
+          <option value="Brief Overview">Brief Overview</option>
+          <option value="Maximal Detail">Maximal Detail</option>
+           </select>
+
+        <label class="block text-gray-300 text-xs font-semibold mb-1" for="outputFormat">Output Format (Optional)</label>
+        <input
+          id="outputFormat"
+          type="text"
+          placeholder="e.g., As a bulleted list, In markdown format, A JSON object"
+          class="w-full bg-[#1f1f1f] text-gray-300 text-xs rounded px-3 py-2 mb-4 placeholder:text-gray-500 focus:outline-none"
+        />
+
+
+        <div class="flex items-center space-x-2 mb-2">
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" id="includeExamples" checked class="sr-only peer" />
+            <div
+              class="w-10 h-6 bg-gray-700 rounded-full peer peer-checked:bg-purple-600 peer-focus:ring-2 peer-focus:ring-purple-500 transition-colors"
+            ></div>
+            <span
+              class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform peer-checked:translate-x-4"
+            ></span>
+          </label>
+          <span class="text-gray-300 text-xs font-semibold">Suggest Examples/Analogies (for AI to include)</span>
+        </div>
+
+        <div class="flex items-center space-x-2 mb-6">
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" id="addInstructions" class="sr-only peer" />
+            <div
+              class="w-10 h-6 bg-gray-700 rounded-full peer peer-checked:bg-purple-600 peer-focus:ring-2 peer-focus:ring-purple-500 transition-colors"
+            ></div>
+            <span
+              class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform peer-checked:translate-x-4"
+            ></span>
+          </label>
+          <span class="text-gray-300 text-xs font-semibold">Add Additional Instructions Field</span>
+        </div>
+
+         <div id="additional-instructions-field" class="hidden mb-6">
+             <label class="block text-gray-300 text-xs font-semibold mb-1" for="additionalInstructions">Additional Instructions</label>
+             <textarea
+                 id="additionalInstructions"
+                 rows="3"
+                 placeholder="e.g., Focus on ethical implications, Keep it under 500 words, Use vivid language"
+                 class="w-full bg-[#1f1f1f] text-gray-300 text-xs rounded p-3 resize-none placeholder:text-gray-500 focus:outline-none"
+             ></textarea>
+         </div>
+
+
+        <div class="flex justify-between items-center">
+          <button
+            id="reset-button"
+            class="flex items-center space-x-2 text-gray-300 text-xs font-semibold hover:text-white focus:outline-none"
+            type="button"
+          >
+            <i class="fas fa-sync-alt"></i>
+            <span>Reset</span>
+          </button>
+          <button
+            id="generate-button"
+            class="bg-purple-600 text-white text-xs font-semibold rounded px-4 py-2 flex items-center space-x-1 hover:bg-purple-700 focus:outline-none"
+            type="button"
+          >
+            <i class="fas fa-magic"></i>
+            <span>Generate Prompt</span>
+          </button>
+        </div>
+      </section>
+
+      <section id="generated-prompt-section" class="mt-6">
+        <h3 class="font-bold text-white mb-1">Generated AI Prompt</h3>
+        <p class="text-gray-400 text-xs mb-2">Your customized prompt for AI</p>
+        <textarea
+          id="generatedPrompt"
+          rows="8"
+          placeholder="Your generated prompt will appear here..."
+          class="w-full bg-[#1f1f1f] text-gray-400 text-xs rounded p-3 resize-none focus:outline-none"
+          readonly
+        ></textarea>
+
+        <div class="flex justify-between mt-3">
+          <button
+            id="copy-button"
+            class="flex items-center space-x-2 text-gray-300 text-xs font-semibold hover:text-white focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+            type="button"
+            disabled
+          >
+            <i class="far fa-copy"></i>
+            <span>Copy</span>
+          </button>
+          <button
+            id="save-button"
+            class="bg-purple-600 text-white text-xs font-semibold rounded px-4 py-2 opacity-50 cursor-not-allowed disabled:opacity-50 disabled:cursor-not-allowed hover:bg-purple-700"
+            type="button"
+            disabled
+          >
+            Save
+          </button>
+        </div>
+         <div id="copy-feedback" class="text-green-500 text-xs mt-2 hidden">Copied to clipboard!</div>
+         <div id="save-feedback" class="text-green-500 text-xs mt-2 hidden">Prompt saved!</div>
+         <div id="save-error-feedback" class="text-red-500 text-xs mt-2 hidden">Nothing to save!</div>
+      </section>
+
+      <section id="saved-prompts-section" class="hidden mt-6">
+           <h3 class="font-bold text-white mb-4">Saved Prompts</h3>
+           <div id="saved-prompts-list">
+               <p class="text-gray-400 text-xs">No prompts saved yet.</p>
+           </div>
+       </section>
+
+    </div>
+  </main>
+
+  <footer class="w-full max-w-md text-center text-gray-500 text-xs mt-8 mb-4">
+    © <span id="current-year"></span> PromptCraft. Create powerful AI prompts with ease.
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const promptCategorySelect = document.getElementById('promptCategory');
+      const topicSubjectInput = document.getElementById('topicSubject');
+      const aiRolePersonaInput = document.getElementById('aiRolePersona');
+      const toneSelect = document.getElementById('tone');
+      const detailLevelSelect = document.getElementById('detailLevel');
+      const outputFormatInput = document.getElementById('outputFormat');
+      const includeExamplesCheckbox = document.getElementById('includeExamples');
+      const addInstructionsCheckbox = document.getElementById('addInstructions');
+      const additionalInstructionsField = document.getElementById('additional-instructions-field');
+      const additionalInstructionsTextarea = document.getElementById('additionalInstructions');
+      const generateButton = document.getElementById('generate-button');
+      const resetButton = document.getElementById('reset-button');
+      const generatedPromptTextarea = document.getElementById('generatedPrompt');
+      const copyButton = document.getElementById('copy-button');
+      const saveButton = document.getElementById('save-button');
+      const copyFeedback = document.getElementById('copy-feedback');
+      const saveFeedback = document.getElementById('save-feedback');
+      const saveErrorFeedback = document.getElementById('save-error-feedback');
+
+
+      const generatorTab = document.getElementById('generator-tab');
+      const savedTab = document.getElementById('saved-tab');
+      const generatorSection = document.getElementById('generator-section');
+      const generatedPromptSection = document.getElementById('generated-prompt-section'); // Keep generated prompt section separate for showing/hiding
+      const savedPromptsSection = document.getElementById('saved-prompts-section');
+      const savedPromptsList = document.getElementById('saved-prompts-list');
+      const savedCountSpan = document.getElementById('saved-count');
+
+      const currentYearSpan = document.getElementById('current-year');
+      currentYearSpan.textContent = new Date().getFullYear();
+
+      // --- Local Storage Functions ---
+      const getSavedPrompts = () => {
+          const prompts = localStorage.getItem('promptCraftSavedPrompts');
+          return prompts ? JSON.parse(prompts) : [];
+      };
+
+      const savePrompt = (prompt) => {
+          const prompts = getSavedPrompts();
+           // Avoid saving duplicate prompts
+          if (!prompts.includes(prompt)) {
+            prompts.push(prompt);
+            localStorage.setItem('promptCraftSavedPrompts', JSON.stringify(prompts));
+            updateSavedCount();
+            renderSavedPrompts(); // Re-render saved prompts when a new one is added
+             showFeedback(saveFeedback);
+          } else {
+            console.log("Prompt already saved."); // Or provide user feedback
+             showFeedback(saveErrorFeedback, "Prompt already saved!");
+          }
+      };
+
+       const deletePrompt = (index) => {
+           const prompts = getSavedPrompts();
+           if (index > -1 && index < prompts.length) {
+               prompts.splice(index, 1);
+               localStorage.setItem('promptCraftSavedPrompts', JSON.stringify(prompts));
+               updateSavedCount();
+               renderSavedPrompts(); // Re-render after deletion
+           }
+       };
+
+      const updateSavedCount = () => {
+          const prompts = getSavedPrompts();
+          savedCountSpan.textContent = prompts.length;
+          // Disable saved tab if no prompts
+           if (prompts.length === 0) {
+               savedTab.disabled = true;
+               savedTab.classList.add('opacity-50', 'cursor-not-allowed');
+           } else {
+                savedTab.disabled = false;
+                savedTab.classList.remove('opacity-50', 'cursor-not-allowed');
+           }
+      };
+
+      // --- Rendering Saved Prompts ---
+      const renderSavedPrompts = () => {
+          const prompts = getSavedPrompts();
+          savedPromptsList.innerHTML = ''; // Clear current list
+
+          if (prompts.length === 0) {
+              savedPromptsList.innerHTML = '<p class="text-gray-400 text-xs">No prompts saved yet.</p>';
+              return;
+          }
+
+          prompts.forEach((prompt, index) => {
+              const promptElement = document.createElement('div');
+              promptElement.classList.add('bg-[#1f1f1f]', 'rounded', 'p-3', 'mb-3', 'text-gray-300', 'text-xs', 'whitespace-pre-wrap', 'break-words');
+              promptElement.innerHTML = `
+                  <p>${prompt}</p>
+                  <div class="flex justify-end mt-2 space-x-2">
+                      <button class="copy-saved-prompt text-gray-400 hover:text-white focus:outline-none" data-index="${index}" title="Copy Saved Prompt">
+                          <i class="far fa-copy"></i>
+                      </button>
+                       <button class="delete-saved-prompt text-red-500 hover:text-red-600 focus:outline-none" data-index="${index}" title="Delete Saved Prompt">
+                           <i class="fas fa-trash"></i>
+                       </button>
+                  </div>
+              `;
+              savedPromptsList.appendChild(promptElement);
+          });
+
+           // Add event listeners to the new copy and delete buttons
+           savedPromptsList.querySelectorAll('.copy-saved-prompt').forEach(button => {
+               button.addEventListener('click', async (e) => {
+                   const index = e.currentTarget.dataset.index;
+                   const prompts = getSavedPrompts();
+                   if (prompts[index]) {
+                       try {
+                            await navigator.clipboard.writeText(prompts[index]);
+                            console.log('Saved prompt copied!');
+                             // Optional: Show brief feedback near the button or globally
+                       } catch (err) {
+                           console.error('Failed to copy saved prompt:', err);
+                           // Optional: Show error feedback
+                       }
+                   }
+               });
+           });
+
+           savedPromptsList.querySelectorAll('.delete-saved-prompt').forEach(button => {
+               button.addEventListener('click', (e) => {
+                    const index = e.currentTarget.dataset.index;
+                    deletePrompt(index);
+               });
+           });
+      };
+
+      // --- Feedback Message Function ---
+       const showFeedback = (element, message = null) => {
+           if (message) element.textContent = message;
+           element.classList.remove('hidden');
+           setTimeout(() => {
+               element.classList.add('hidden');
+               if (message) element.textContent = element === copyFeedback ? 'Copied to clipboard!' : 'Prompt saved!'; // Reset to default text
+           }, 2000); // Hide feedback after 2 seconds
+       };
+
+
+      // --- Event Listeners ---
+
+      // Toggle additional instructions field visibility
+      addInstructionsCheckbox.addEventListener('change', () => {
+        if (addInstructionsCheckbox.checked) {
+          additionalInstructionsField.classList.remove('hidden');
+        } else {
+          additionalInstructionsField.classList.add('hidden');
+           additionalInstructionsTextarea.value = ''; // Clear value when hidden
+        }
+      });
+
+      // Generate Prompt Button
+      generateButton.addEventListener('click', () => {
+        const promptCategory = promptCategorySelect.value;
+        const topicSubject = topicSubjectInput.value.trim();
+        const aiRolePersona = aiRolePersonaInput.value.trim();
+        const tone = toneSelect.value;
+        const detailLevel = detailLevelSelect.value;
+        const outputFormat = outputFormatInput.value.trim();
+        const includeExamples = includeExamplesCheckbox.checked;
+        const addInstructions = addInstructionsCheckbox.checked;
+        const additionalInstructions = additionalInstructionsTextarea.value.trim();
+
+        if (!topicSubject) {
+            generatedPromptTextarea.value = "Please enter a Topic / Subject to generate a prompt.";
+            copyButton.disabled = true;
+            saveButton.disabled = true;
+            saveButton.classList.add('opacity-50', 'cursor-not-allowed');
+            copyButton.classList.add('opacity-50', 'cursor-not-allowed');
+             copyFeedback.classList.add('hidden');
+             saveFeedback.classList.add('hidden');
+             saveErrorFeedback.classList.add('hidden');
+             return;
+        }
+
+        let prompt = ``;
+
+        // Start with role/persona if provided
+        if (aiRolePersona) {
+            prompt += `Act as ${aiRolePersona}. `;
+        } else {
+             // Default behavior if no persona
+             prompt += `Generate a response. `;
+        }
+
+        // Add detail level and tone
+        prompt += `Provide a ${detailLevel}, ${tone} response `;
+
+        // Add category and subject
+        switch(promptCategory) {
+            case 'General':
+                 prompt += `about "${topicSubject}".`;
+                 break;
+            case 'Creative Writing':
+                 prompt += `for a creative writing piece about "${topicSubject}".`;
+                 break;
+             case 'Code Generation':
+                 prompt += `by providing code about "${topicSubject}".`;
+                 break;
+             case 'Image Description':
+                  prompt += `by describing an image based on "${topicSubject}".`;
+                 break;
+             case 'Data Analysis':
+                  prompt += `by performing data analysis on "${topicSubject}".`;
+                  break;
+             case 'Educational':
+                   prompt += `to educate on "${topicSubject}".`;
+          
